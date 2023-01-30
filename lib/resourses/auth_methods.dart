@@ -13,7 +13,7 @@ class AuthMethods {
     required String password,
     required String username,
     required String bio,
-    required Uint8List file,
+    Uint8List? file,
   }) async {
     String res = 'Some Error';
     try {
@@ -21,7 +21,13 @@ class AuthMethods {
       UserCredential credential = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
 
-      String profilePhotoUrl = await StorageMethods.uploadImageToStorage(childName: 'profilePics', file: file, isPost: false);
+      late String profilePhotoUrl;
+      if(file != null ) {
+        await StorageMethods.uploadImageToStorage(childName: 'profilePics', file: file, isPost: false);
+      }
+      else{
+        profilePhotoUrl = 'https://firebasestorage.googleapis.com/v0/b/instagram-b849d.appspot.com/o/profilePics%2Fdp0zmTNZfdTnQwFt9e1o1HyAPXu1?alt=media&token=1b938f6d-d683-4d00-8a71-0cd23ef80cd1'; 
+      }
 
       //add user to database
       await firestore.collection('users').doc(credential.user!.uid).set({
@@ -36,7 +42,7 @@ class AuthMethods {
 
       res = 'User Created Successfully';
 
-    } catch (error) {
+    } on FirebaseAuthException catch (error) {
       res = error.toString();
     }
     return res;
@@ -44,12 +50,15 @@ class AuthMethods {
   //end of signup user method
 
   //login user
-  static Future<void> loginUser({required String email, required String password,}) async{
+  static Future<String> loginUser({required String email, required String password,}) async{
+    String res = 'Some Error';
     try{
-      await auth.signInWithEmailAndPassword(email: email, password: password).then((value) => print('Success'));
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      res = 'Logged in Successfully';
     } on FirebaseAuthException catch(error){
-      print(error.code);
+      return(error.toString());
     }
+    return res;
   }
 
 }

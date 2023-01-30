@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:instagram/resourses/auth_methods.dart';
+import 'package:instagram/screens/home_screen.dart';
 import 'package:instagram/screens/signup_screen.dart';
 import 'package:instagram/utils/colors.dart';
+import 'package:instagram/utils/utils.dart';
 import 'package:instagram/widgets/text_input_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,6 +26,19 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void loginUser() async{
+    showDilogueBox(context);
+    String res = await AuthMethods.loginUser(email: _emailController.text, password: _passwordController.text);
+    Navigator.of(context).pop();
+    if (res == 'success') {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+        return const HomeScreen();
+      }));
+    } else {
+      showSnackBar(res, context);
+    }
   }
 
   @override
@@ -65,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               //login button
               InkWell(
-                onTap: () {},
+                onTap: loginUser,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,

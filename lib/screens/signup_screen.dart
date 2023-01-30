@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +41,23 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
+  void signUpUser() async {
+    showDilogueBox(context);
+    String res = await AuthMethods.signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image,
+    );
+    Navigator.of(context).pop();
+    if (res == 'success') {
+      showSnackBar(res, context);
+    } else {
+      showSnackBar(res, context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,14 +81,16 @@ class _SignupScreenState extends State<SignupScreen> {
               //circular image for input and show
               Stack(
                 children: [
-                  _image != null?
-                  CircleAvatar(
-                    radius: 64,
-                    backgroundImage: MemoryImage(_image!),    
-                  ) : const CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage('https://moorepediatricnc.com/wp-content/uploads/2022/08/default_avatar.jpg'),    
-                  ),
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : const CircleAvatar(
+                          radius: 64,
+                          backgroundImage: NetworkImage(
+                              'https://moorepediatricnc.com/wp-content/uploads/2022/08/default_avatar.jpg'),
+                        ),
                   Positioned(
                       right: 10,
                       bottom: -10,
@@ -120,16 +141,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               //Signup button
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods.signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                    file: _image!,
-                  );
-                  print(res);
-                },
+                onTap: signUpUser,
                 child: Container(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   width: double.infinity,
