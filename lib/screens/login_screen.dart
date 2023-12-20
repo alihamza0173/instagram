@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,21 +23,37 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  late final StreamSubscription<User?> listner;
+
+  @override
+  void initState() {
+    listner = FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) {
+          return const ChatScreen();
+        }));
+      }
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    listner.cancel();
     super.dispose();
   }
 
-  void loginUser() async{
+  void loginUser() async {
     showDilogueBox(context);
-    String res = await AuthMethods.loginUser(email: _emailController.text, password: _passwordController.text);
+    String res = await AuthMethods.loginUser(
+        email: _emailController.text, password: _passwordController.text);
     Navigator.of(context).pop();
-    if (res == 'success') {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-        return const HomeScreen();
+    if (res == 'Logged in Successfully') {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+        return const ChatScreen();
       }));
     } else {
       showSnackBar(res, context);

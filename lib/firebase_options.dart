@@ -17,13 +17,19 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -46,31 +52,12 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCoBmqlNyqiC1CIYvwdVEGWP7-6dZzG1qU',
-    appId: '1:12976450264:web:0cd916e2a309f11ccb05ad',
-    messagingSenderId: '12976450264',
-    projectId: 'instagram-b849d',
-    authDomain: 'instagram-b849d.firebaseapp.com',
-    storageBucket: 'instagram-b849d.appspot.com',
-    measurementId: 'G-3PFC91PL88',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBeMvFSm96T_bYJbS5xlR57byNFhRAXriA',
-    appId: '1:12976450264:android:68df282674295560cb05ad',
-    messagingSenderId: '12976450264',
-    projectId: 'instagram-b849d',
-    storageBucket: 'instagram-b849d.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCoRmtf-m8-tI39-0brVOGyOXBABTp240c',
-    appId: '1:12976450264:ios:238e94c035bb7725cb05ad',
-    messagingSenderId: '12976450264',
-    projectId: 'instagram-b849d',
-    storageBucket: 'instagram-b849d.appspot.com',
-    iosClientId: '12976450264-2vapu8cfsu85sfoaasdkeuls32162peb.apps.googleusercontent.com',
-    iosBundleId: 'com.example.instagram',
+    apiKey: 'AIzaSyAuqrrj6iErHd0pp1gRAJr0A8eSQByBin4',
+    appId: '1:38779452564:android:e09b246c692e123eda0881',
+    messagingSenderId: '38779452564',
+    projectId: 'crud-79b36',
+    databaseURL: 'https://crud-79b36-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'crud-79b36.appspot.com',
   );
 }
